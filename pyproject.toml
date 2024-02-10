@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "pyrpn"
+version = "0.1.0"
+description = ""
+authors = [ "Robert Ulmer <robert.ulmer@frontexperts.com>" ]
+readme = "README.md"
+packages = [ {include = "pyrpn"} ]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.1.1"
+flake8 = "^7.0.0"
+pytest = "^8.0.0"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+py_version = 27
+[tool.flake8]
+line-length = 79
