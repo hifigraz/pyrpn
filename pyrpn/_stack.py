@@ -39,6 +39,22 @@ class Stack:
         """Implement the default constructor."""
         self._data: List[StackElement] = []
 
+    def __len__(self) -> int:
+        """Return the number of elements on the stack."""
+        return len(self._data)
+
+    def __str__(self) -> str:
+        """Return a string representation of the stack."""
+        return_value = "[%s ]"
+        return_value = return_value % ", ".join(
+            map(lambda x: str(x), self._data)
+        )
+        return return_value
+
+    def __iter__(self) -> str:
+        """Create an iterator."""
+        return self._data.__iter__()
+
     def clear(self):
         """Clear every element on the stack."""
         self._data.clear()
@@ -90,15 +106,3 @@ class Stack:
             return self._data.pop(-1)
         except IndexError:
             raise IndexError("pop from empty stack")
-
-    def __len__(self) -> int:
-        """Return the number of elements on the stack."""
-        return len(self._data)
-
-    def __str__(self) -> str:
-        """Return a string representation of the stack."""
-        return_value = "[%s ]"
-        return_value = return_value % ", ".join(
-            map(lambda x: str(x), self._data)
-        )
-        return return_value

@@ -124,3 +124,16 @@ def test_stack_pop_functions():
         temp_stack.pop_top()
     with pytest.raises(IndexError, match="pop from empty stack"):
         temp_stack.pop_bottom()
+
+
+def test_stack_iterator_functions():
+    """Test the iteration over a stack."""
+    temp_stack = stack.Stack()
+    assert str(temp_stack) == "[ ]"
+    test_elements = [1.5, 2.5, 3.5]
+    for i in test_elements:
+        temp_stack.push_bottom(stack.StackNumberElement(i))
+    index = 0
+    for stack_element in temp_stack:
+        assert str(test_elements[index]) == str(stack_element)
+        index += 1

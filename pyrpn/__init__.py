@@ -1,3 +1,5 @@
+"""The pyrpn main module."""
+
 from . import _stack as stack
 
 VERSION = "0.1.0"
