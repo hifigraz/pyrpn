@@ -2,6 +2,6 @@ def main():
     print("Hello world!")
 
 
-def sysomething(args):
+def say_something(args):
     print(args)
     pass

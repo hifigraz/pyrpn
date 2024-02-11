@@ -25,6 +25,9 @@ class Stack:
     def __init__(self):
         self._data: List[StackElement] = []
 
+    def clear(self):
+        self._data.clear()
+
     def push_back(self, stack_element: StackElement) -> None:
         if not isinstance(stack_element, StackElement):
             raise AttributeError("Invalid argument (%s)" % str(stack_element))
@@ -34,6 +37,18 @@ class Stack:
         if not isinstance(stack_element, StackElement):
             raise AttributeError("Invalid argument (%s)" % str(stack_element))
         self._data = [stack_element] + self._data
+
+    def peek_front(self) -> StackElement:
+        try:
+            return self._data[0]
+        except IndexError:
+            raise IndexError("peek on empty stack")
+
+    def peek_back(self) -> StackElement:
+        try:
+            return self._data[-1]
+        except IndexError:
+            raise IndexError("peek on empty stack")
 
     def pop_front(self) -> StackElement:
         try:
