@@ -15,6 +15,7 @@ flake8 = "^7.0.0"
 pytest = "^8.0.0"
 isort = "^5.13.2"
 flake8-spellcheck = "^0.28.0"
+flake8-docstrings = "^1.7.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -28,3 +29,8 @@ multi_line_output = 3
 py_version = 27
 [tool.flake8]
 line-length = 79
+docstring-convention = "pep257"
+select = "D417"
+spellcheck = true
+dictionaries="en_US,python,technical"
+spellcheck-targets="comments"
