@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+
 from typing import List
 
 
@@ -51,7 +53,7 @@ class Stack:
         )
         return return_value
 
-    def __iter__(self) -> str:
+    def __iter__(self) -> Iterator[StackElement]:
         """Create an iterator."""
         return self._data.__iter__()
 

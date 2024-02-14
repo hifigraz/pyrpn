@@ -24,19 +24,15 @@ def test_basic_stack_functions():
     assert len(temp_stack) == 1
 
     with pytest.raises(AttributeError, match="Invalid argument [(]1[)]"):
-        temp_stack.push_bottom(1)  # pyright: ignore[reportGeneralTypeIssues]
+        temp_stack.push_bottom(1)  # type: ignore
     with pytest.raises(AttributeError, match="Invalid argument [(]Robert[)]"):
-        temp_stack.push_bottom(
-            "Robert"  # pyright: ignore[reportGeneralTypeIssues]
-        )
+        temp_stack.push_bottom("Robert")  # type: ignore
     assert str(temp_stack) == '["StackElement" ]'
 
     with pytest.raises(AttributeError, match="Invalid argument [(]1[)]"):
-        temp_stack.push_top(1)  # pyright: ignore[reportGeneralTypeIssues]
+        temp_stack.push_top(1)  # type: ignore
     with pytest.raises(AttributeError, match="Invalid argument [(]Robert[)]"):
-        temp_stack.push_top(
-            "Robert"  # pyright: ignore[reportGeneralTypeIssues]
-        )
+        temp_stack.push_top("Robert")  # type: ignore
     temp_stack.push_top(stack.StackElement())
     assert str(temp_stack) == '["StackElement", "StackElement" ]'
 
