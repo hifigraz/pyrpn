@@ -1,5 +1,7 @@
 """Test the calculator class."""
 
+from pytest import raises
+
 import pyrpn
 
 
@@ -34,3 +36,24 @@ def test_calculator_stack_number_push():
     calculator += "10e-1"
     assert len(calculator.stack) == 5
     assert str(calculator.stack) == "[1.0, 1.0, 1.0, 1.0, 1.0 ]"
+
+
+def test_command_base_class():
+    """Test the Base command class."""
+    stack = pyrpn.stack.Stack()
+    base_command = pyrpn.calculator.CalculatorCommand(stack)
+    assert base_command
+    assert str(stack) == "[ ]"
+    with raises(
+        NotImplementedError,
+        match="CalculatorCommand base class not implemented.",
+    ):
+        base_command.do()
+    assert str(stack) == "[ ]"
+    stack.push_top(pyrpn.stack.StackNumberElement(1))
+    with raises(
+        NotImplementedError,
+        match="CalculatorCommand base class not implemented.",
+    ):
+        base_command.do()
+    assert str(stack) == "[1.0 ]"

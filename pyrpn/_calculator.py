@@ -21,3 +21,25 @@ class Calculator:
         """Add elements to the calculator."""
         self._stack.push_top(StackNumberElement(float(other)))
         return self
+
+
+class CalculatorCommand:
+    """Command Pattern base class for Calculator."""
+
+    COMMAND_NAME = "bogus"
+
+    def __init__(self, stack: Stack):
+        """Initialize object."""
+        self._stack = stack
+
+    def do(self):
+        """Execute command."""
+        raise NotImplementedError(
+            "CalculatorCommand base class not implemented."
+        )
+
+    def undo(self):
+        """Undo command."""
+        raise NotImplementedError(
+            "CalculatorCommand base class not implemented."
+        )
