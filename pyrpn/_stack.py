@@ -20,14 +20,35 @@ class StackNumberElement(StackElement):
         * number : Either a number or another StackNumberElement
                    to be used for this stack element
         """
+        self._data: float = 0
         if type(number) is int:
             self._data = float(number)
         elif type(number) is float:
-            self._data = number
+            self._data = float(number)
         elif isinstance(number, StackNumberElement):
-            self.data = number._data
+            self._data = number._data
         else:
             raise AttributeError("Invalid argument (%s)" % str(number))
+
+    def __float__(self) -> float:
+        """Return float definition of this."""
+        return self._data
+
+    def __add__(self, other: "StackNumberElement | float | int"):
+        """Add to StackNumberElements."""
+        return StackNumberElement(self._data + float(other))
+
+    def __sub__(self, other: "StackNumberElement | float | int"):
+        """Sub from StackNumberElements."""
+        return StackNumberElement(self._data - float(other))
+
+    def __mul__(self, other: "StackNumberElement | float | int"):
+        """Mul from StackNumberElements."""
+        return StackNumberElement(self._data * float(other))
+
+    def __truediv__(self, other: "StackNumberElement | float | int"):
+        """Div from StackNumberElements."""
+        return StackNumberElement(self._data / float(other))
 
     def __str__(self) -> str:
         """Implement a string representation."""
@@ -56,6 +77,10 @@ class Stack:
     def __iter__(self) -> Iterator[StackElement]:
         """Create an iterator."""
         return self._data.__iter__()
+
+    def __getitem__(self, index: int) -> StackElement:
+        """Implement index operator."""
+        return self._data[index]
 
     def clear(self):
         """Clear every element on the stack."""
