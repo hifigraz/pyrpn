@@ -1,6 +1,29 @@
 """Calculator class."""
 
-from ._stack import Stack, StackNumberElement
+import logging
+
+from typing import Dict, List, Set, Type
+
+from ._commands import CalculatorCommand, PushCommand
+from ._stack import Stack
+
+
+class CommandMapping:
+    """Mapping keys to commands."""
+
+    def __init__(self, keys: Set[str], command: Type):
+        """Construct the mapping."""
+        self._keys = keys
+        self._command = command
+
+    def _get_keys(self):
+        return self._keys
+
+    def _get_command(self):
+        return self._command
+
+    keys = property(fget=_get_keys)
+    command = property(fget=_get_command)
 
 
 class Calculator:
@@ -9,134 +32,72 @@ class Calculator:
     def __init__(self):
         """Implement the default constructor."""
         self._stack = Stack()
+        self._commands: Dict[str, Type] = {}
+        self._undo_commands: List[CalculatorCommand] = []
+        self._redo_commands: List[CalculatorCommand] = []
+
+    def register_command(self, mapping: CommandMapping) -> None:
+        """Map new command to calculator."""
+        for key in mapping.keys:
+            if key in self._commands:
+                raise ValueError("%s already registered as key." % key)
+        for key in mapping.keys:
+            self._commands[key] = mapping.command
+
+    def registered_key(self, key: str) -> bool:
+        """Check if the given key is a registered one."""
+        return key in self._commands
+
+    def __add__(self, other: float | int | str) -> "Calculator":
+        """Add elements to the calculator."""
+        command: None | CalculatorCommand = None
+        if other in self.keys:
+            command = self._commands[str(other)](self._stack)
+        elif type(other) is float or type(other) is int:
+            command = PushCommand(self._stack, {PushCommand.VALUE_KEY: other})
+        elif type(other) is str:
+            try:
+                number = float(other)
+                command = PushCommand(
+                    self._stack, {PushCommand.VALUE_KEY: number}
+                )
+
+            except Exception:
+                logging.error("Other %s not supported" % other)
+                raise NotImplementedError(
+                    "Pushing strings to the stack is not yet supported."
+                )
+        if isinstance(command, CalculatorCommand):
+            command.do()
+            self._undo_commands.append(command)
+            self._redo_commands.clear()
+        else:
+            raise RuntimeError(
+                "operand is of unsupported type %s" % type(other)
+            )
+        return self
+
+    def undo(self) -> None:
+        """Undo command."""
+        if len(self._undo_commands):
+            command = self._undo_commands.pop()
+            command.undo()
+            self._redo_commands.append(command)
+
+    def redo(self) -> None:
+        """Redo command."""
+        if len(self._redo_commands):
+            command = self._redo_commands.pop()
+            command.do()
+            self._undo_commands.append(command)
 
     def _get_stack(self):
         return self._stack
 
+    def _get_keys(self):
+        return self._commands.keys()
+
+    keys = property(fget=_get_keys)
     stack = property(
         _get_stack,
     )
-
-    def __add__(self, other: float | int | str) -> "Calculator":
-        """Add elements to the calculator."""
-        self._stack.push_top(StackNumberElement(float(other)))
-        return self
-
-
-class CalculatorCommand:
-    """Command Pattern base class for Calculator."""
-
-    COMMAND_NAME = "bogus"
-
-    def __init__(self, stack: Stack):
-        """Initialize object."""
-        self._stack = stack
-        self._undo_stack = Stack()
-        self._done = False
-
-    def _prepare(self):
-        """Prepare needed elements. and do validity checks."""
-        raise NotImplementedError(
-            "CalculatorCommand base class not implemented."
-        )
-
-    def _do(self):
-        """Implement the command."""
-        raise NotImplementedError(
-            "CalculatorCommand base class not implemented."
-        )
-
-    def _undo(self):
-        """Implement undo command."""
-        raise NotImplementedError(
-            "CalculatorCommand base class not implemented."
-        )
-
-    def do(self):
-        """Execute do."""
-        self._prepare()
-        self._do()
-        self._done = True
-
-    def undo(self):
-        """Execute undo."""
-        if not self._done:
-            raise ValueError("Command not done and cannot be undo.")
-        self._undo()
-        self._done = False
-
-
-class CalculatorCommandTwoElements(CalculatorCommand):
-    """Base class for command, which need two elements on the stack."""
-
-    def __init__(self, stack):
-        """Construct the two Elements command."""
-        super().__init__(stack)
-        self._a: StackNumberElement = StackNumberElement(0)
-        self._b: StackNumberElement = StackNumberElement(0)
-
-    def _prepare(self):
-        if len(self._stack) < 2:
-            raise ValueError("Too less elements on stack.")
-        temp_element = self._stack.pop_top()
-        if isinstance(temp_element, StackNumberElement):
-            self._b = temp_element
-            self._undo_stack.push_top(self._b)
-        else:
-            self._stack.push_top(temp_element)
-            raise ValueError(
-                "%s is not of type StackNumberElement." % temp_element
-            )
-        temp_element = self._stack.pop_top()
-        if isinstance(temp_element, StackNumberElement):
-            self._a = temp_element
-            self._undo_stack.push_top(self._a)
-        else:
-            self._stack.push_top(temp_element)
-            self._stack.push_top(self._undo_stack.pop_top())
-            raise ValueError(
-                "%s is not of type StackNumberElement." % temp_element
-            )
-
-    def _undo(self):
-        """Undo command."""
-        self._stack.pop_top()
-        self._stack.push_top(self._undo_stack.pop_top())
-        self._stack.push_top(self._undo_stack.pop_top())
-
-
-class CalculatorCommandAdd(CalculatorCommandTwoElements):
-    """Command Add."""
-
-    COMMAND_NAME = "add"
-
-    def _do(self):
-        """Execute command."""
-        self._stack.push_top(self._a + self._b)
-
-
-class CalculatorCommandSub(CalculatorCommandTwoElements):
-    """Command Sub."""
-
-    COMMAND_NAME = "sub"
-
-    def _do(self):
-        self._stack.push_top(self._a - self._b)
-
-
-class CalculatorCommandMultiply(CalculatorCommandTwoElements):
-    """Command Multiply."""
-
-    COMMAND_NAME = "multiply"
-
-    def _do(self):
-        self._stack.push_top(self._a * self._b)
-
-
-class CalculatorCommandDivide(CalculatorCommandTwoElements):
-    """Command Divide."""
-
-    COMMAND_NAME = "divide"
-
-    def _do(self):
-        self._stack.push_top(self._a / self._b)

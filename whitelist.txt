@@ -1,6 +1,6 @@
-pyrpn
-pyright
-
+fget
 getitem
 mul
+pyright
+pyrpn
 truediv
