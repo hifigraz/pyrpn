@@ -25,7 +25,6 @@ def say_something(arguments: List[str]) -> None:
 
 def simple_calculator() -> int:
     """Execute main function for very simple tui calculator."""
-
     LINE = 20 * "-"
     CLEAR = chr(27) + "[2J"
 
