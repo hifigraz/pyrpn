@@ -1,5 +1,6 @@
 fget
 getitem
+linesep
 mul
 pyright
 pyrpn

@@ -82,6 +82,18 @@ class PopCommand(CalculatorCommand):
         self._stack.push_top(self._undo_stack.pop_top())
 
 
+class ClearCommand(CalculatorCommand):
+    """Clear the entire stack."""
+
+    def _do(self):
+        while len(self._stack):
+            self._undo_stack.push_top(self._stack.pop_top())
+
+    def _undo(self):
+        while len(self._undo_stack):
+            self._stack.push_top(self._undo_stack.pop_top())
+
+
 class CalculatorCommandTwoElements(CalculatorCommand):
     """Base class for command, which need two elements on the stack."""
 
@@ -119,6 +131,22 @@ class CalculatorCommandTwoElements(CalculatorCommand):
         self._stack.pop_top()
         self._stack.push_top(self._undo_stack.pop_top())
         self._stack.push_top(self._undo_stack.pop_top())
+
+
+class SwapCommand(CalculatorCommandTwoElements):
+    """Swap Command."""
+
+    COMMAND_NAME = "swap"
+
+    def _do(self):
+        self._stack.push_top(self._b)
+        self._stack.push_top(self._a)
+
+    def _undo(self):
+        a = self._stack.pop_top()
+        b = self._stack.pop_top()
+        self._stack.push_top(a)
+        self._stack.push_top(b)
 
 
 class CalculatorCommandAdd(CalculatorCommandTwoElements):

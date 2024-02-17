@@ -34,3 +34,6 @@ select = "D417"
 spellcheck = true
 dictionaries="en_US,python,technical"
 spellcheck-targets="comments"
+
+[tool.poetry.scripts]
+pyrpn = "pyrpn.main:simple_calculator"

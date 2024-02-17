@@ -223,3 +223,31 @@ def test_calculator_add_sub():
     calculator.undo()
     calculator.undo()
     assert str(calculator.stack) == "[2.0, 3.0, 6.0 ]"
+
+
+def test_clear():
+    """Test the clear functionality."""
+    stack = pyrpn.stack.Stack()
+    clear_command = pyrpn.commands.ClearCommand(stack)
+    stack.push_top(pyrpn.stack.StackNumberElement(1))
+    stack.push_top(pyrpn.stack.StackNumberElement(2))
+    stack.push_top(pyrpn.stack.StackNumberElement(3))
+    assert str(stack) == "[3.0, 2.0, 1.0 ]"
+    clear_command.do()
+    assert str(stack) == "[ ]"
+    clear_command.undo()
+    assert str(stack) == "[3.0, 2.0, 1.0 ]"
+
+
+def test_swap():
+    """Test the swap functionality."""
+    stack = pyrpn.stack.Stack()
+    swap_command = pyrpn.commands.SwapCommand(stack)
+    stack.push_top(pyrpn.stack.StackNumberElement(1))
+    stack.push_top(pyrpn.stack.StackNumberElement(2))
+    stack.push_top(pyrpn.stack.StackNumberElement(3))
+    assert str(stack) == "[3.0, 2.0, 1.0 ]"
+    swap_command.do()
+    assert str(stack) == "[2.0, 3.0, 1.0 ]"
+    swap_command.undo()
+    assert str(stack) == "[3.0, 2.0, 1.0 ]"
