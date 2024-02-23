@@ -2,3 +2,5 @@
 __pycache__
 dist
 poetry.lock
+.vscode/launch.json
+.vscode/settings.json

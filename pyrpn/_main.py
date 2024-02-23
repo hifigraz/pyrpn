@@ -2,25 +2,7 @@
 
 import os
 
-from typing import List
-
 from ._factory import create_basic_arithmetic_calculator
-
-
-def main() -> None:
-    """Implement the main entry point."""
-    print("Hello world!")
-
-
-def say_something(arguments: List[str]) -> None:
-    """Say what is in the arguments.
-
-    - arguments: This is the string list.
-    """
-    print(arguments)
-    was_here = 1
-    print(was_here)
-    pass
 
 
 def simple_calculator() -> int:
@@ -86,3 +68,4 @@ def simple_calculator() -> int:
             error = str(e)
 
     return 0
+
