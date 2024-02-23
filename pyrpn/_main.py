@@ -68,4 +68,3 @@ def simple_calculator() -> int:
             error = str(e)
 
     return 0
-
